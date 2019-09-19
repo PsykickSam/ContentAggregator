@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Content Aggregator</title>
+</head>
+<body>
+
+    <h1>This is the home page</h1>
+    <h2>Welcome to content aggregator</h2>
+    {% for key, data in yahooNews.items %}
+        <h3>
+            <a href="{{ key }}" target="_blank">{{ data }}</a>
+        </h3>
+    {% endfor %}
+    
+
+</body>
+</html>
