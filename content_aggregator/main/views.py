@@ -1,38 +1,24 @@
 from django.shortcuts import render
+from background_task import background
 
-from requests import get 
-from requests.exceptions import RequestException
-from contextlib import closing
-from bs4 import BeautifulSoup, Comment
+from .scraper import scrap
+from .database import database as db
 
-# Create your views here.
-def is_good_response(resp):
-    content_type = resp.headers['Content-Type'].lower()
-    return (resp.status_code == 200 and content_type is not None and content_type.find('html') > -1)
+import itertools
 
+# Methods
+# @background(schedule=0)
+def run_on_homepage():
+    yahoo_5 = dict(itertools.islice(scrap.scrap_yahoo_news().items(), 5))
+    db.save_to_database(scrap.scrap_yahoo_news())
 
-def homepage(request):
-    data = None 
-
-    try: 
-        with closing(get("https://news.yahoo.com/", stream=True)) as resp:
-            if is_good_response(resp):
-                data = resp.content 
-            else: 
-                data = None
-    except RequestException as re:
-        print(re)
-        data = None
+    print("\n\nData:\n", yahoo_5, "\nEnd\n\n")
+    return yahoo_5
     
-    soup = BeautifulSoup(data, 'html.parser')
-
-    tags = soup.find_all("a", class_="Fw(b)", href=True)
-
-    yahooNews = {}
-
-    for node in tags:
-        yahooNews['https://news.yahoo.com' + node['href']] = ''.join(node.find_all(text=lambda  text:not isinstance(text, Comment)))
+# Create your views here.
+def homepage(request):
+    yahoo_5 = run_on_homepage()
 
     return render(request, 'index.html', {
-        'yahooNews': yahooNews,  
-    })
+        'yahooNews': yahoo_5,  
+    })  

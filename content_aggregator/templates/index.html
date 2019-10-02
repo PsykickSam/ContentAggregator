@@ -1,21 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Content Aggregator</title>
-</head>
-<body>
+{% extends 'base/base.html' %}
 
-    <h1>This is the home page</h1>
-    <h2>Welcome to content aggregator</h2>
-    {% for key, data in yahooNews.items %}
-        <h3>
-            <a href="{{ key }}" target="_blank">{{ data }}</a>
-        </h3>
-    {% endfor %}
+{% block content %}
+<div class="col-8">
+    <div class="row">
+        <h1 class="display-3 d-block w-100">Content Aggregator</h1>
+        <h3>A simple content aggregator with python and django.</h3>
+    </div>
     
+    <div class="row">
+        <p class="w-100">Yahoo News</p>
+        <ul>
+            {% for key, data in yahooNews.items %}
+                <li>
+                    <a href="{{ key }}" target="_blank" class="single-line">{{ data }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <form class="form-inline">
+            <div class="form-group">
+                <input type="email" class="form-control" placeholder="Subscribe...">
+                <input type="submit" class="btn btn-info ml-2" value="Submit">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
 
-</body>
-</html>
+<!-- manakenshu ga arimasu kara sorosoro shitsure shittemo yoroshideshoka? -->
